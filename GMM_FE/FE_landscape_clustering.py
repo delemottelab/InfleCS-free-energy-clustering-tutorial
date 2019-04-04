@@ -61,7 +61,7 @@ class LandscapeClustering():
 
 		# Sort points from higher to lower density
 		density_all = density_model.density(points)
-		density_all[transition_point_inds] = -1
+		#density_all[transition_point_inds] = -1
 		densities_trans_points = density_all[transition_point_inds]
 
 		# Sort transition points in decending density order (assign cluster index to highest density points first)
