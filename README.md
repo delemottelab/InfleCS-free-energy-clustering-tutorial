@@ -1,4 +1,11 @@
-# Free energy estimation and clustering with Gaussian mixture models: Tutorial
-Jupyter notebook tutorial for estimating free energy landscapes and clustering with GMMs. 
+# Free energy estimation and clustering with InfleCS
+This repository contains a jupyter notebook tutorial together with the necessary information and code for estimating free energy landscapes and extracting core-states from density maxima with InfleCS clustering.
 
-Author: Annie Westerlund (2019)
+Dependencies:
+* Python 3.6
+* Scikit-learn 0.19 or later
+* Matplotlib
+
+----------------------------------------------------------
+Annie Westerlund, KTH Royal Institute of Technology, 2019
+annie.westerlund@gmail.com 
