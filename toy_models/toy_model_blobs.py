@@ -3,7 +3,7 @@ from sklearn import datasets
 from free_energy_clustering.GMM import GaussianMixture
 
 class Blobs(GaussianMixture):
-	def __init__(self,n_components=3,n_dims=2,noise=0.1):
+	def __init__(self,n_components=3,n_dims=2,noise=0):
 		GaussianMixture.__init__(self, n_components=n_components)
 		self.labels_ = None
 		self.data_ = None
