@@ -8,4 +8,3 @@ Dependencies:
 
 ----------------------------------------------------------
 Annie Westerlund, KTH Royal Institute of Technology, 2019
-annie.westerlund@gmail.com 
