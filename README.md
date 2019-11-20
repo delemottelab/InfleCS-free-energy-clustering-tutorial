@@ -1,5 +1,5 @@
 # Free energy estimation and clustering with InfleCS
-This repository contains a *jupyter notebook tutorial* together with the necessary information and code for estimating free energy landscapes with Gaussian mixture models and extracting core-states from density maxima with InfleCS clustering.
+This repository contains a jupyter notebook tutorial together with the necessary information and code for estimating free energy landscapes with Gaussian mixture models and extracting core-states from density maxima with InfleCS clustering.
 
 Dependencies:
 * Python 3.6
