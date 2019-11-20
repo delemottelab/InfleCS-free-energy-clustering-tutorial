@@ -16,8 +16,8 @@ DOI: 10.1021/acs.jctc.7b00346 <br>
 
 
 **Clustering with InfleCS**<br>
-InfleCS: Clustering Free Energy Landscapes with Gaussian Mixtures<br>
-*Annie M. Westerlund, Lucie Delemotte*<br>
+*InfleCS: Clustering Free Energy Landscapes with Gaussian Mixtures*<br>
+Annie M. Westerlund, Lucie Delemotte<br>
 Journal of Chemical Theory and Computation, 2019<br>
 DOI: 10.1021/acs.jctc.9b00454<br>
 
