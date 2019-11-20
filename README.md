@@ -8,17 +8,18 @@ Dependencies:
 
 -----------------------------------------------------------
 # References
-**Free energy estimation with Gaussian mixture models**
-*Inference of Calmodulin’s Ca2+-Dependent Free Energy Landscapes via Gaussian Mixture Model Validation*
-Annie M. Westerlund, Tyler J. Harpole, Christian Blau, and Lucie Delemotte
-Journal of Chemical Theory and Computation, 2018
-DOI: 10.1021/acs.jctc.7b00346
-Clustering with InfleCS
+**Free energy estimation with Gaussian mixture models** <br>
+*Inference of Calmodulin’s Ca2+-Dependent Free Energy Landscapes via Gaussian Mixture Model Validation* <br>
+Annie M. Westerlund, Tyler J. Harpole, Christian Blau, and Lucie Delemotte <br>
+Journal of Chemical Theory and Computation, 2018 <br>
+DOI: 10.1021/acs.jctc.7b00346 <br>
 
-**InfleCS: Clustering Free Energy Landscapes with Gaussian Mixtures**
-*Annie M. Westerlund, Lucie Delemotte*
-Journal of Chemical Theory and Computation, 2019
-DOI: 10.1021/acs.jctc.9b00454
+
+**Clustering with InfleCS**<br>
+InfleCS: Clustering Free Energy Landscapes with Gaussian Mixtures<br>
+*Annie M. Westerlund, Lucie Delemotte*<br>
+Journal of Chemical Theory and Computation, 2019<br>
+DOI: 10.1021/acs.jctc.9b00454<br>
 
 ----------------------------------------------------------
 Annie Westerlund, KTH Royal Institute of Technology, 2019
