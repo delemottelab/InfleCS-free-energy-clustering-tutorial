@@ -522,7 +522,7 @@ class FreeEnergyClustering(object):
 		return
 
 	def visualize(self,title="Free energy landscape", fontsize=30, savefig=True, xlabel='x', ylabel='y', zlabel='z', vmax=7.5,
-				  n_contour_levels=15, show_data=False, figsize= [12, 10], filename='free_energy_landscape', dx=1):
+				  n_contour_levels=15, show_data=False, figsize= [12, 10], filename='free_energy_landscape', dx=1, ax=None):
 
 		if self.n_dims_ > 3:
 			print('Plotting does not support > 3 dimensions')
@@ -535,11 +535,13 @@ class FreeEnergyClustering(object):
 		my_cmap_cont.set_over('white')
 
 		plt.rcParams['figure.figsize'] = figsize
-		fig = plt.figure()
-		if self.n_dims_ < 3:
-			ax = fig.add_subplot(1, 1, 1)
-		else:
-			ax = fig.add_subplot(111, projection='3d')
+
+		if ax is None:
+			fig = plt.figure()
+			if self.n_dims_ < 3:
+				ax = fig.add_subplot(1, 1, 1)
+			else:
+				ax = fig.add_subplot(111, projection='3d')
 		ax.tick_params(labelsize=fontsize - 2)
 
 		plt.tick_params(axis='both', which='major', labelsize=fontsize-4)
@@ -557,7 +559,7 @@ class FreeEnergyClustering(object):
 		FE_landscape[self.FE_landscape_ > vmax+0.5] = vmax+0.5
 
 		if self.n_dims_ == 2:
-			plt.contourf(self.coords_[0], self.coords_[1], FE_landscape, n_contour_levels, cmap=my_cmap, vmin=0, vmax=vmax)
+			ax.contourf(self.coords_[0], self.coords_[1], FE_landscape, n_contour_levels, cmap=my_cmap, vmin=0, vmax=vmax)
 			cb=plt.colorbar(label='[kcal/mol]')
 			text = cb.ax.yaxis.label
 			font = matplotlib.font_manager.FontProperties(size=fontsize-3,family='serif',weight='light')
@@ -569,12 +571,12 @@ class FreeEnergyClustering(object):
 				tick.set_fontweight('light')
 
 			ax.set_ylim([self.coords_[1].min(), self.coords_[1].max()])
-			plt.ylabel(ylabel, fontsize=fontsize - 2,fontname='serif',fontweight='light')
+			ax.set_ylabel(ylabel, fontsize=fontsize - 2,fontname='serif',fontweight='light')
 		elif self.n_dims_ == 1:
 			if self.standard_error_FE_ is not None:
-				plt.fill_between(self.coords_[0], FE_landscape - self.standard_error_FE_, FE_landscape + self.standard_error_FE_, color='k', alpha=0.2,zorder=2)
-			plt.plot(self.coords_[0], FE_landscape, linewidth=3,color='k',zorder=1)
-			plt.ylabel('Free energy [kcal/mol]',fontsize=fontsize-2,fontname='serif',fontweight='light')
+				ax.fill_between(self.coords_[0], FE_landscape - self.standard_error_FE_, FE_landscape + self.standard_error_FE_, color='k', alpha=0.2,zorder=2)
+			ax.plot(self.coords_[0], FE_landscape, linewidth=3,color='k',zorder=1)
+			ax.set_ylabel('Free energy [kcal/mol]',fontsize=fontsize-2,fontname='serif',fontweight='light')
 		else:
 			sc = ax.scatter(self.data_[::dx,0], self.data_[::dx,1], self.data_[::dx,2], s=30, c=self.FE_points_[::dx], alpha=0.8, cmap=my_cmap, vmin=0, vmax=vmax, edgecolor='k')
 			
@@ -645,8 +647,8 @@ class FreeEnergyClustering(object):
 					plt.legend(fontsize=fontsize-10,facecolor=[0.9,0.9,0.92])
 				else:
 					plt.legend(fontsize=fontsize-4,facecolor=[0.9,0.9,0.92])
-		plt.title(title, fontsize=fontsize,fontname='serif',fontweight='light')
-		plt.xlabel(xlabel, fontsize=fontsize - 2,fontname='serif',fontweight='light')
+		ax.set_title(title, fontsize=fontsize,fontname='serif',fontweight='light')
+		ax.set_xlabel(xlabel, fontsize=fontsize - 2,fontname='serif',fontweight='light')
 		plt.rc('xtick', labelsize=fontsize-2)
 		plt.rc('ytick', labelsize=fontsize-2)
 		matplotlib.rc('font',family='Serif')
