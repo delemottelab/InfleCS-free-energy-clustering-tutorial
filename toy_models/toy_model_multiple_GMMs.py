@@ -1,5 +1,5 @@
 import numpy as np
-from GMM_FE.GMM import GaussianMixture
+from free_energy_clustering.GMM import GaussianMixture
 
 class MultipleGMMs(GaussianMixture):
 	def __init__(self):

@@ -1,6 +1,6 @@
 import numpy as np
-from GMM_FE.GMM import GaussianMixture
-from GMM_FE.GMM_free_energy import FreeEnergy
+from free_energy_clustering.GMM import GaussianMixture
+from free_energy_clustering.GMM_free_energy import FreeEnergyClustering
 
 class GMM2dNonlinear():
 
