@@ -559,8 +559,8 @@ class FreeEnergyClustering(object):
 		FE_landscape[self.FE_landscape_ > vmax+0.5] = vmax+0.5
 
 		if self.n_dims_ == 2:
-			ax.contourf(self.coords_[0], self.coords_[1], FE_landscape, n_contour_levels, cmap=my_cmap, vmin=0, vmax=vmax)
-			cb=plt.colorbar(label='[kcal/mol]')
+			ctf = ax.contourf(self.coords_[0], self.coords_[1], FE_landscape, n_contour_levels, cmap=my_cmap, vmin=0, vmax=vmax)
+			cb=plt.colorbar(ctf, label='[kcal/mol]')
 			text = cb.ax.yaxis.label
 			font = matplotlib.font_manager.FontProperties(size=fontsize-3,family='serif',weight='light')
 			text.set_font_properties(font)
