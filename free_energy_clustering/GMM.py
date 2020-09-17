@@ -1,4 +1,5 @@
 import sys
+import math
 import numpy as np
 from scipy.stats import multivariate_normal
 
@@ -14,19 +15,15 @@ class GaussianMixture():
 		self.verbose_ = verbose
 		return
 	
-	def fit(self, x, data_weights=None, bias_factors=None):
+	def fit(self, x, data_weights=None):
 		"""
 		Fit GMM to points in x with EM.
-		:param data_weights: Weights of each data point. These can be estimated given input bias_factor.
-		:param bias_factors: Bias factors in exponent. b(x) = -bias_factor*free_energy.
+		:param data_weights: Weights of each data point.
 		"""
 
 		if data_weights is not None:
 			x = x[data_weights>0]
 			data_weights = data_weights[data_weights>0]
-
-		if bias_factors is not None and data_weights is None:
-			data_weights = np.ones(x.shape[0])
 		
 		self.data_weights_ = data_weights
 		while True:
@@ -42,21 +39,7 @@ class GaussianMixture():
 				prev_loglikelihood= loglikelihood
 				loglikelihood = self.loglikelihood(x, self.data_weights_)
 
-			if bias_factors is not None:
-				prev_data_weights = np.copy(self.data_weights_)
-				self.compute_data_weights(x, bias_factors)
-
-				change = np.linalg.norm(prev_data_weights/prev_data_weights.sum() - self.data_weights_/self.data_weights_.sum())
-				if self.verbose_:
-					sys.stdout.write("\r" + 'Data weight change: '+str(change))
-					sys.stdout.flush()
-				if change < 5e-5:
-					break
-			else:
-				break
-
-		if bias_factors is not None and self.verbose_:
-			print()
+			break
 		return self
 
 	def predict(self,x):
@@ -79,39 +62,22 @@ class GaussianMixture():
 			self.covariances_[i_component] = tmp_cov
 		return
 
-	def _reweight_normal_density(self, density, data_weights, n_dims):
-		"""
-		Reweight the normal probability density using the data weights.
-		:param density:
-		:param data_weights:
-		:return:
-		"""
-
-		# Reweight density
-		new_density = np.power(density,data_weights)
-		
-		# Normalize density
-		new_density = np.multiply(new_density, np.power(data_weights,float(n_dims)/2.0))
-
-		return new_density
-
 	def _expectation(self,x, data_weights=None):
 		"""
 		Perform expecation step
 		"""
 		n_points = x.shape[0]
-		n_dims = x.shape[1]
 		gamma = np.zeros((self.n_components_,n_points))
 
 		for i_component in range(self.n_components_):
 
 			normal_density = multivariate_normal.pdf(x, mean=self.means_[i_component], cov=self.covariances_[i_component])
-			gamma[i_component,:] = self.weights_[i_component]*normal_density
+			gamma[i_component, :] = self.weights_[i_component]*normal_density
 		
 		gamma /= np.sum(gamma,axis=0)			
 		
 		if data_weights is not None:
-			gamma = np.multiply(gamma,data_weights)	
+			gamma = np.multiply(gamma, data_weights)
 		
 		return gamma
 	
@@ -142,55 +108,25 @@ class GaussianMixture():
 		"""
 		Nk = np.sum(gamma,axis=1)
 		for i_component in range(self.n_components_):
-			self.means_[i_component,:] = np.dot(x.T,gamma[i_component])/Nk[i_component]
+			self.means_[i_component, :] = np.dot(x.T,gamma[i_component])/Nk[i_component]
 
 		return
 	
-	def _update_covariances(self,x, gamma):
+	def _update_covariances(self, x, gamma):
 		"""
 		Update each component covariance
 		"""
 		n_dims = x.shape[1]
 
-		Nk = np.sum(gamma,axis=1)
+		Nk = np.sum(gamma, axis=1)
 		for i_component in range(self.n_components_):
 			y = x - self.means_[i_component]
 			y2 = np.multiply(gamma[i_component,:,np.newaxis],y).T
 			self.covariances_[i_component] = y2.dot(y)/Nk[i_component] + 1e-9*np.eye(n_dims)
 
 		return
-
-	def compute_data_weights(self, x, bias_factors):
-		"""
-		Update the data weights using the current estimated density.
-		:param x: data
-		:param bias_factors: Bias factors in exponent. b(x) = bias_factor(x)*free_energy(x).
-		Option two: without bias factors: The weights are obtained from the fraction
-		"density(x) in ensemble k divided by density(x) in ensemble 0"
-		:return:
-		"""
-		using_bias_factors = False
-		if using_bias_factors:
-			# Compute current free energy estimate
-			density = self.density(x)
-			density[density<1e-15]=1e-15
-			free_energy = -np.log(density)
-
-			# Reweight points
-			self.data_weights_ = np.exp(np.multiply(bias_factors,free_energy))
-		else:
-			densities_biased = self.density(x, self.data_weights_)
-			densities_unbiased = self.density(x)
-			self.data_weights_ = densities_biased/densities_unbiased
-			print('Size data weights: '+str(self.data_weights_.shape))
-
-		self.data_weights_[self.data_weights_<1e-8] = 1e-8
-		if np.any(np.isnan(self.data_weights_)):
-			print('Warning: NaN values in data weights!')
-
-		return
 		
-	def density(self,x):
+	def density(self, x):
 		"""
 		Compute GMM density at given points, x.
 		"""
@@ -204,17 +140,35 @@ class GaussianMixture():
 		
 		return density
 	
-	def loglikelihood(self,x, data_weights=None):
+	def loglikelihood(self, x, data_weights=None):
 		"""
-		Compute log-likelihood. Possibility of data weights.
+		Compute log-likelihood. Support data weights.
 		"""
 		density = self.density(x)
 		density[density<1e-15] = 1e-15
 		if data_weights is None:
 			log_density = np.log(density)
 		else:
-			log_density = np.multiply(np.log(density),data_weights)
+			log_density = np.multiply(np.log(density), data_weights)
 		return np.mean(log_density)
+
+	def bic(self, x, data_weights=None):
+		"""
+        Compute BIC score. Support data weights.
+        """
+		n_points, n_dims = x.shape
+		n_params = (1 + n_dims + n_dims * (n_dims + 1) / 2.0) * self.n_components_
+		loglikelihood = n_points * self.loglikelihood(x, data_weights=data_weights)
+		return -2.0 * loglikelihood + n_params * math.log(n_points)
+
+	def aic(self, x, data_weights=None):
+		"""
+		Compute BIC score. Support data weights.
+		"""
+		n_points, n_dims = x.shape
+		n_params = (1 + n_dims + n_dims * (n_dims + 1) / 2.0) * self.n_components_
+		loglikelihood = n_points * self.loglikelihood(x, data_weights=data_weights)
+		return -2.0 * loglikelihood + 2.0 * n_params
 
 	def sample(self, n_points):
 		"""
