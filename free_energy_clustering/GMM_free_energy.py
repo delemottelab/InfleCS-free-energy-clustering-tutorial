@@ -515,7 +515,7 @@ class FreeEnergyClustering(object):
             return
 
         # Set custom colormaps
-        my_cmap = matplotlib.cm.get_cmap('jet')
+        my_cmap = copy.copy(matplotlib.cm.get_cmap('jet'))
         my_cmap.set_over('white')
         my_cmap_cont = matplotlib.colors.ListedColormap(['black'])
         my_cmap_cont.set_over('white')
