@@ -24,6 +24,8 @@ class GaussianMixture():
 		if data_weights is not None:
 			x = x[data_weights>0]
 			data_weights = data_weights[data_weights>0]
+			data_weights = data_weights/np.sum(data_weights)
+			data_weights = data_weights * data_weights.shape[0]
 		
 		self.data_weights_ = data_weights
 		while True:
